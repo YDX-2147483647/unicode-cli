@@ -1,7 +1,14 @@
 use std::fmt;
-use unic_ucd::*;
 use regex::Regex;
 use log::*;
+use unic_ucd::{
+    is_alphabetic, is_bidi_mirrored, is_case_ignorable, is_cased, is_lowercase, is_uppercase,
+    is_white_space, Age, Block, BlockIter, GeneralCategory,
+};
+// Both `unic_ucd` and `unicode_names2` provide `Name`.
+// We prefer the latter because only it is synced with the latest Unicode.
+// https://github.com/open-i18n/rust-unic/issues/260
+use unicode_names2::Name;
 
 pub struct Info {
     name: Name,
@@ -20,7 +27,7 @@ pub struct Info {
 impl Info {
     pub fn of(c: char) -> Option<Info> {
         Some(Info {
-            name: Name::of(c)?,
+            name: unicode_names2::name(c)?,
             category: GeneralCategory::of(c),
             block: Block::of(c)?.name,
             alphabetic: is_alphabetic(c),
@@ -72,7 +79,7 @@ impl CharInfo {
     }
 
     fn display_block(&self, c: char) {
-        match (Name::of(c), Block::of(c)) {
+        match (unicode_names2::name(c), Block::of(c)) {
             (Some(name), Some(block)) => {
                 println!("type: unicode");
                 println!("name: {}", name);
@@ -119,7 +126,7 @@ impl CharInfo {
                 print!("Unknown Block ");
             }
 
-            if let Some(name) = Name::of(c) {
+            if let Some(name) = unicode_names2::name(c) {
                 print!("{} ", name);
             } else {
                 print!("None ");
@@ -176,7 +183,7 @@ pub fn search(regex: &Regex) -> Vec<char> {
 
     for block in BlockIter::new() {
         for candidate in block.range {
-            if let Some(name) = Name::of(candidate) {
+            if let Some(name) = unicode_names2::name(candidate) {
                 let name = name.to_string();
 
                 if regex.is_match(&name) {
