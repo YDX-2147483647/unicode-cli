@@ -1,8 +1,7 @@
-use clap::{App, AppSettings, Arg, SubCommand, ArgMatches};
+use clap::{App, AppSettings, Arg, ArgMatches, SubCommand};
+use regex::RegexBuilder;
 use unic_ucd::*;
 use unicode_cli::*;
-use regex::RegexBuilder;
-use log::*;
 
 fn main() {
     let matches = App::new(env!("CARGO_PKG_NAME"))
@@ -95,20 +94,17 @@ fn main() {
                         .long("all")
                         .help("Print all characters."),
                 )
-                .arg(
-                    Arg::with_name("BLOCK")
-                        .help("Which block to display."),
-                ),
+                .arg(Arg::with_name("BLOCK").help("Which block to display.")),
         )
         .get_matches();
 
     stderrlog::new()
-	.module(module_path!())
-	.quiet(matches.is_present("quiet"))
-	.timestamp(stderrlog::Timestamp::Second)
-	.verbosity(matches.occurrences_of("verbose") as usize)
-	.init()
-	.unwrap();
+        .module(module_path!())
+        .quiet(matches.is_present("quiet"))
+        .timestamp(stderrlog::Timestamp::Second)
+        .verbosity(matches.occurrences_of("verbose") as usize)
+        .init()
+        .unwrap();
 
     match matches.subcommand() {
         ("compose", Some(args)) => compose(args),
@@ -167,7 +163,7 @@ fn list(args: &ArgMatches) {
                 print!("{}", c);
             }
 
-            println!("");
+            println!();
         } else {
             println!("error: can't find block {}", block);
         }
