@@ -20,21 +20,21 @@ fn main() {
         .subcommand(
             SubCommand::with_name("compose")
                 .alias("c")
-                .about("Compose a string from unicode codepoins.")
+                .about("Compose a string from Unicode code points.")
                 .arg(
                     Arg::with_name("NAME")
                         .required(true)
                         .multiple(true)
-                        .help("Name of a unicode codepoint"),
+                        .help("A Unicode character, its name, or its code point"),
                 ),
         )
         .subcommand(
             SubCommand::with_name("inspect")
-                .about("Inspect a unicode string.")
+                .about("Inspect a Unicode string.")
                 .arg(
                     Arg::with_name("STRING")
                         .required(true)
-                        .help("String containing unicode data."),
+                        .help("String containing Unicode data."),
                 )
                 .arg(
                     Arg::with_name("long")
@@ -42,11 +42,21 @@ fn main() {
                         .short("l")
                         .long("long")
                         .help("Output more detail."),
+                )
+                .after_help(
+                    "Meaning of the flags in the output:
+  a/u: ASCII or Unicode.
+  a/-: alphabetic or not.
+  b/-: mirrored in bidirectional context or not.
+  c/-: cased or not.
+  i/-: case ignorable or not.
+  u/-: uppercase or not.
+  l/-: lowercase or not.",
                 ),
         )
         .subcommand(
             SubCommand::with_name("info")
-                .about("Print information about a unicode character.")
+                .about("Print information about a Unicode character.")
                 .arg(
                     Arg::with_name("CHARACTER")
                         .required(true)
@@ -55,7 +65,7 @@ fn main() {
         )
         .subcommand(
             SubCommand::with_name("search")
-                .about("Search for unicode characters by name or properties.")
+                .about("Search for Unicode characters by name or properties.")
                 .arg(
                     Arg::with_name("REGEX")
                         .required(true)
@@ -72,7 +82,7 @@ fn main() {
         .subcommand(
             SubCommand::with_name("list")
                 .alias("ls")
-                .about("List unicode characters")
+                .about("List Unicode characters")
                 .arg(
                     Arg::with_name("long")
                         .short("l")
@@ -118,7 +128,7 @@ fn compose(args: &ArgMatches) {
             if let Some(point) = parse_scalar_value(name) {
                 composed.push(point);
             } else {
-                println!("{} is not a name of a unicode code point.", name);
+                println!("{} is not a name of a Unicode code point.", name);
             }
         }
     } else {

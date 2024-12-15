@@ -81,7 +81,7 @@ impl CharInfo {
     fn display_block(&self, c: char) {
         match (unicode_names2::name(c), Block::of(c)) {
             (Some(name), Some(block)) => {
-                println!("type: unicode");
+                println!("type: Unicode");
                 println!("name: {}", name);
                 println!("block: {}", block.name);
             }
